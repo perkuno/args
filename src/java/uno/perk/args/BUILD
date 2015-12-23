@@ -1,0 +1,10 @@
+annotation_processor(
+  name='args',
+  sources=rglobs('*.java'),
+  processors=[
+    'uno.perk.args.apt.ArgsProcessor',
+  ],
+  dependencies=[
+    '3rdparty:jdk-tools'
+  ],
+)
