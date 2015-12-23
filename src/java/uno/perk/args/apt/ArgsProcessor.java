@@ -1,7 +1,6 @@
 package uno.perk.args.apt;
 
 import java.util.Collections;
-import java.util.List;
 import java.util.Set;
 
 import javax.annotation.processing.AbstractProcessor;
@@ -15,9 +14,7 @@ import javax.tools.Diagnostic;
 
 import com.sun.source.doctree.DocCommentTree;
 import com.sun.source.doctree.DocTree;
-import com.sun.source.doctree.TextTree;
 import com.sun.source.util.DocTrees;
-import com.sun.source.util.SimpleDocTreeVisitor;
 import com.sun.source.util.Trees;
 
 import uno.perk.args.Optionable;
