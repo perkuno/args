@@ -1,6 +1,7 @@
 package uno.perk.args.apt;
 
 import java.util.Collections;
+import java.util.List;
 import java.util.Set;
 
 import javax.annotation.processing.AbstractProcessor;
@@ -13,7 +14,10 @@ import javax.lang.model.element.TypeElement;
 import javax.tools.Diagnostic;
 
 import com.sun.source.doctree.DocCommentTree;
+import com.sun.source.doctree.DocTree;
+import com.sun.source.doctree.TextTree;
 import com.sun.source.util.DocTrees;
+import com.sun.source.util.SimpleDocTreeVisitor;
 import com.sun.source.util.Trees;
 
 import uno.perk.args.Optionable;
@@ -54,17 +58,33 @@ public class ArgsProcessor extends AbstractProcessor {
   private void process(TypeElement typeElement) {
     DocCommentTree classDoc = docTrees.getDocCommentTree(trees.getPath(typeElement));
     if (classDoc != null) {
-      note(typeElement, "Found class doc for %s: %s", typeElement.getQualifiedName(), classDoc);
+      note(typeElement, "Found class doc for %s: %s",
+          typeElement.getQualifiedName(), extractDoc(classDoc));
     }
     for (Element element : typeElement.getEnclosedElements()) {
       if (element instanceof ExecutableElement) {
         DocCommentTree methodDoc = docTrees.getDocCommentTree(trees.getPath(element));
         if (methodDoc != null) {
           note(typeElement, "Found method doc for %s.%s: %s",
-              typeElement.getQualifiedName(), element.getSimpleName(), methodDoc);
+              typeElement.getQualifiedName(), element.getSimpleName(), extractDoc(methodDoc));
         }
       }
     }
+  }
+
+  private String extractDoc(DocCommentTree docCommentTree) {
+    StringBuilder doc = new StringBuilder();
+    for (DocTree docTree : docCommentTree.getFirstSentence()) {
+      doc.append(docTree.toString());
+    }
+    if (!docCommentTree.getBody().isEmpty() && doc.length() > 0) {
+      doc.append('\n');
+      doc.append('\n');
+    }
+    for (DocTree docTree : docCommentTree.getBody()) {
+      doc.append(docTree.toString());
+    }
+    return doc.toString();
   }
 
   private void error(Element element, String message, Object... args) {

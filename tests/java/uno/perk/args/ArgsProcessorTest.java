@@ -8,9 +8,7 @@ import org.junit.Test;
 public class ArgsProcessorTest {
 
   /**
-   * This is some class doc.
-   *
-   * With more body.
+   * This is some {@code ArgsProcessorTest} class doc.
    */
   @Optionable
   interface Options {
@@ -21,12 +19,16 @@ public class ArgsProcessorTest {
     /**
      * The number of threads to use.
      *
-     * If unspecified, 1 thread is used.
+     * If unspecified,
+     * 1 thread is used.
      *
      * @return The number of threads to use.
      */
     int threads();
 
+    /**
+     * @return The configured file paths.
+     */
     List<File> paths();
   }
 
