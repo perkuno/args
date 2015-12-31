@@ -13,11 +13,10 @@ import javax.lang.model.element.TypeElement;
 import javax.tools.Diagnostic;
 
 import com.sun.source.doctree.DocCommentTree;
-import com.sun.source.doctree.DocTree;
 import com.sun.source.util.DocTrees;
 import com.sun.source.util.Trees;
 
-import uno.perk.args.Optionable;
+import uno.perk.args.Options;
 
 public class ArgsProcessor extends AbstractProcessor {
 
@@ -31,7 +30,7 @@ public class ArgsProcessor extends AbstractProcessor {
 
   @Override
   public Set<String> getSupportedAnnotationTypes() {
-    return Collections.singleton(Optionable.class.getName());
+    return Collections.singleton(Options.class.getName());
   }
 
   @Override
@@ -43,7 +42,7 @@ public class ArgsProcessor extends AbstractProcessor {
 
   @Override
   public boolean process(Set<? extends TypeElement> annotations, RoundEnvironment roundEnv) {
-    for (Element element : roundEnv.getElementsAnnotatedWith(Optionable.class)) {
+    for (Element element : roundEnv.getElementsAnnotatedWith(Options.class)) {
       if (!(element instanceof TypeElement)) {
         error(element, "Should only find types annotated with @Optionable.");
       }
@@ -70,18 +69,7 @@ public class ArgsProcessor extends AbstractProcessor {
   }
 
   private String extractDoc(DocCommentTree docCommentTree) {
-    StringBuilder doc = new StringBuilder();
-    for (DocTree docTree : docCommentTree.getFirstSentence()) {
-      doc.append(docTree.toString());
-    }
-    if (!docCommentTree.getBody().isEmpty() && doc.length() > 0) {
-      doc.append('\n');
-      doc.append('\n');
-    }
-    for (DocTree docTree : docCommentTree.getBody()) {
-      doc.append(docTree.toString());
-    }
-    return doc.toString();
+    return PlainTextCollector.collectText(docCommentTree);
   }
 
   private void error(Element element, String message, Object... args) {
