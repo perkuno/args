@@ -1,6 +1,5 @@
 package uno.perk.args.apt;
 
-import java.util.Objects;
 import java.util.Optional;
 
 import com.sun.source.doctree.AttributeTree;
